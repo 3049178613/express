@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidu.express_order.daopjc.OrdersDao">
+
+    <resultMap id="BaseResultMap" type="com.yidu.express_order.entity.Orders">
+        <!--@Table orders-->
+        <result property="orderId" column="order_Id" jdbcType="INTEGER"/>
+        <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
+        <result property="ordertime" column="orderTime" jdbcType="VARCHAR"/>
+        <result property="orderstate" column="orderState" jdbcType="INTEGER"/>
+        <result property="ordernumber" column="orderNumber" jdbcType="VARCHAR"/>
+        <result property="addressIdDirection" column="address_Id_direction" jdbcType="INTEGER"/>
+        <result property="addressIdSender" column="address_Id_sender" jdbcType="INTEGER"/>
+        <result property="payWay" column="Pay_way" jdbcType="INTEGER"/>
+        <result property="updatetime" column="updateTime" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id
+        from express.orders
+        where order_Id = #{orderId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id
+        from express.orders
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id
+        from express.orders
+        <where>
+            <if test="orderId != null">
+                and order_Id = #{orderId}
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId}
+            </if>
+            <if test="ordertime != null and ordertime != ''">
+                and orderTime = #{ordertime}
+            </if>
+            <if test="orderstate != null">
+                and orderState = #{orderstate}
+            </if>
+            <if test="ordernumber != null and ordernumber != ''">
+                and orderNumber = #{ordernumber}
+            </if>
+            <if test="addressIdDirection != null">
+                and address_Id_direction = #{addressIdDirection}
+            </if>
+            <if test="addressIdSender != null">
+                and address_Id_sender = #{addressIdSender}
+            </if>
+            <if test="payWay != null">
+                and Pay_way = #{payWay}
+            </if>
+            <if test="updatetime != null and updatetime != ''">
+                and updateTime = #{updatetime}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="orderId" useGeneratedKeys="true">
+        insert into express.orders(customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id)
+        values (#{customerId},now(), 1, #{ordernumber}, #{addressIdDirection}, #{addressIdSender}, #{payWay}, #{updatetime}, #{userId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update express.orders
+        <set>
+            <if test="customerId != null">
+                customer_id = #{customerId},
+            </if>
+            <if test="ordertime != null and ordertime != ''">
+                orderTime = #{ordertime},
+            </if>
+            <if test="orderstate != null">
+                orderState = #{orderstate},
+            </if>
+            <if test="ordernumber != null and ordernumber != ''">
+                orderNumber = #{ordernumber},
+            </if>
+            <if test="addressIdDirection != null">
+                address_Id_direction = #{addressIdDirection},
+            </if>
+            <if test="addressIdSender != null">
+                address_Id_sender = #{addressIdSender},
+            </if>
+            <if test="payWay != null">
+                Pay_way = #{payWay},
+            </if>
+            <if test="updatetime != null and updatetime != ''">
+                updateTime = #{updatetime},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        where order_Id = #{orderId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from express.orders where order_Id = #{orderId}
+    </delete>
+
+    <!--查询新增的订单数据-->
+    <select id="justNewAddOrderId" resultMap="BaseResultMap" parameterType="Integer">
+        select order_Id from express.orders where customer_id = #{customerId} order by order_Id desc limit 0 ,#{size}
+    </select>
+
+    <!--<resultMap id="ShowOrderModelMap" type="com.yidu.express_order.entity.ShowOrderModel">
+        <result column="order_Id" property="orderId"></result>
+        <result column="orderTime" property="ordertime"></result>
+        <result column="orderState" property="orderstate"></result>
+        <result column="orderNumber" property="ordernumber"></result>
+        <result column="updateTime" property="updatetime"></result>
+        <result column="address_phone" property="addressPhone"></result>
+        <result column="address_name" property="addressName"></result>
+        <result column="postcode" property="postcode"></result>
+        <result column="province" property="province"></result>
+        <result column="city" property="city"></result>
+        <result column="district" property="district"></result>
+        <result column="street" property="street"></result>
+    </resultMap>
+     o.`order_Id`,o.`orderTime`,o.`orderState`,o.`orderNumber`,o.`updateTime`,a.`address_phone`,a.`address_name`,a.`postcode`,a.`province`,a.`city`,a.`district`,a.`street`
+    -->
+    <!--条件查询订单,并分页-->
+    <select id="queryAllByLimitByWhere" resultMap="BaseResultMap" parameterType="Map">
+        SELECT
+        order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id
+        FROM orders WHERE customer_id= #{customerId}
+        <if test="orderState != null">
+            AND orderState= #{orderState}
+        </if>
+        AND
+        (
+        address_Id_direction IN (SELECT address_Id FROM address
+        <where>
+            <if test="addressName != null and addressName != ''">
+                AND address_name = #{addressName}
+            </if>
+            <if test="addressPhone != null and addressPhone != ''">
+                AND address_phone = #{addressPhone}
+            </if>
+        </where>
+        )
+        OR
+        address_Id_sender IN(SELECT address_Id FROM address
+        <where>
+            <if test="addressName != null and addressName != ''">
+                AND address_name = #{addressName}
+            </if>
+            <if test="addressPhone != null and addressPhone != ''">
+                AND address_phone = #{addressPhone}
+            </if>
+        </where>
+        )
+        )
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            AND DATE_FORMAT(orderTime,'%Y-%m-%d') BETWEEN #{beginTime} AND #{endTime}
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+</mapper>

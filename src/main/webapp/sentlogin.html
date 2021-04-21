@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
+    <meta name="format-detection" content="telephone=no">
+    <title>欢迎您登录快递100</title>
+    <link rel="shortcut icon" href="https://cdn.kuaidi100.com/favicon.ico" />
+    <link rel="icon" type="image/gif" href="https://cdn.kuaidi100.com/images/favicon.gif" />
+    <link rel="stylesheet" href="https://cdn.kuaidi100.com/css/sz/base_v4.css?version=201707271620" />
+    <link rel="stylesheet" href="https://cdn.kuaidi100.com/css/user/login_v5.css?version=2017112711600" />
+<body>
+<div class="form-container">
+    <h3 id="title">账号密码登录</h3>
+    <form action="/sso/login.do?method=plogin" method="POST" id="account" >
+        <input name="isvalid" id="isvalid" type="hidden" value="" />
+        <div class="form-ctrl"><input type="text" placeholder="手机号/邮箱/用户名" name="name" id="name" value=""/></div>
+        <div class="form-ctrl">
+            <input type="password" placeholder="请输入密码" name="password" id="password"  value=""/>
+            <a href="/sso/findpwd.jsp" id="find">忘记密码？</a>
+        </div>
+        <div class="form-ctrl hidden" id="validcode">
+            <input type="text" placeholder="请输入图片验证码" autocomplete="off"  name="validcode" value="" />
+            <img height="30" alt="验证码" title="点击刷新验证码" />
+        </div>
+    </form>
+    <form action="/sso/login.do?method=klogin" method="POST" id="phone" style="display:none;">
+        <div class="form-ctrl"><input type="text" placeholder="请输入手机号" name="phone" id="mobile" value="" /></div>
+        <div class="form-ctrl">
+            <input type="text" placeholder="请输入短信验证码" name="code" id="dpassword" value=""/>
+            <a id="send">获取手机验证码</a>
+        </div>
+    </form>
+    <div id="voice" class="voice" style="display:none;"><a>收不到？试试语音验证码</a></div>
+    <div class="text-warn" id="warn" style="display:none"></div>
+    <button class="btn-submit" id="submit" role="account">登录</button>
+    <div class="type" id="type">
+        <a role="phone">手机短信登录</a>
+        <a role="account" style="display:none;">账号密码登录</a>
+    </div>
+</div>
+<script src="https://cdn.kuaidi100.com/js/util/jquery-1.12.1.min.js"></script>
+<script src="https://cdn.kuaidi100.com/js/util/jquery-migrate-1.4.1.min.js"></script>
+<script src="https://cdn.kuaidi100.com/js/share/base_v4.js?version=201802011630"></script>
+<script src="https://cdn.kuaidi100.com/js/user/login_v5.js?version=201802281500"></script>
+</body>
+</html>

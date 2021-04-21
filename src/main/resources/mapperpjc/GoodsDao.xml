@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidu.express_order.daopjc.GoodsDao">
+
+    <resultMap id="BaseResultMap" type="com.yidu.express_order.entity.Goods">
+        <!--@Table goods-->
+        <result property="goodsId" column="goods_Id" jdbcType="INTEGER"/>
+        <result property="goodstype" column="goodsType" jdbcType="VARCHAR"/>
+        <result property="goodsweight" column="goodsWeight" jdbcType="OTHER"/>
+        <result property="estimateprice" column="estimatePrice" jdbcType="OTHER"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="goodsState" column="goods_state" jdbcType="INTEGER"/>
+        <result property="audit" column="audit" jdbcType="VARCHAR"/>
+        <result property="auditopinion" column="auditOpinion" jdbcType="VARCHAR"/>
+        <result property="stieId" column="stie_id" jdbcType="INTEGER"/>
+        <result property="barcode" column="barCode" jdbcType="VARCHAR"/>
+        <result property="orderId" column="order_Id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          goods_Id, goodsType, goodsWeight, estimatePrice, number, goods_state, audit, auditOpinion, stie_id, barCode, order_Id
+        from express.goods
+        where goods_Id = #{goodsId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          goods_Id, goodsType, goodsWeight, estimatePrice, number, goods_state, audit, auditOpinion, stie_id, barCode, order_Id
+        from express.goods
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          goods_Id, goodsType, goodsWeight, estimatePrice, number, goods_state, audit, auditOpinion, stie_id, barCode, order_Id
+        from express.goods
+        <where>
+            <if test="goodsId != null">
+                and goods_Id = #{goodsId}
+            </if>
+            <if test="goodstype != null and goodstype != ''">
+                and goodsType = #{goodstype}
+            </if>
+            <if test="goodsweight != null">
+                and goodsWeight = #{goodsweight}
+            </if>
+            <if test="estimateprice != null">
+                and estimatePrice = #{estimateprice}
+            </if>
+            <if test="number != null">
+                and number = #{number}
+            </if>
+            <if test="goodsState != null">
+                and goods_state = #{goodsState}
+            </if>
+            <if test="audit != null and audit != ''">
+                and audit = #{audit}
+            </if>
+            <if test="auditopinion != null and auditopinion != ''">
+                and auditOpinion = #{auditopinion}
+            </if>
+            <if test="stieId != null">
+                and stie_id = #{stieId}
+            </if>
+            <if test="barcode != null and barcode != ''">
+                and barCode = #{barcode}
+            </if>
+            <if test="orderId != null">
+                and order_Id = #{orderId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="goodsId" useGeneratedKeys="true">
+        insert into express.goods(goodsType, goodsWeight, estimatePrice, number, goods_state, audit, auditOpinion, stie_id, barCode, order_Id)
+        values (#{goodstype}, #{goodsweight}, #{estimateprice}, #{number}, #{goodsState}, #{audit}, #{auditopinion}, #{stieId}, #{barcode}, #{orderId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update express.goods
+        <set>
+            <if test="goodstype != null and goodstype != ''">
+                goodsType = #{goodstype},
+            </if>
+            <if test="goodsweight != null">
+                goodsWeight = #{goodsweight},
+            </if>
+            <if test="estimateprice != null">
+                estimatePrice = #{estimateprice},
+            </if>
+            <if test="number != null">
+                number = #{number},
+            </if>
+            <if test="goodsState != null">
+                goods_state = #{goodsState},
+            </if>
+            <if test="audit != null and audit != ''">
+                audit = #{audit},
+            </if>
+            <if test="auditopinion != null and auditopinion != ''">
+                auditOpinion = #{auditopinion},
+            </if>
+            <if test="stieId != null">
+                stie_id = #{stieId},
+            </if>
+            <if test="barcode != null and barcode != ''">
+                barCode = #{barcode},
+            </if>
+            <if test="orderId != null">
+                order_Id = #{orderId},
+            </if>
+        </set>
+        where goods_Id = #{goodsId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from express.goods where goods_Id = #{goodsId}
+    </delete>
+
+</mapper>
