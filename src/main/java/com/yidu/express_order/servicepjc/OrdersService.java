@@ -70,4 +70,11 @@ public interface OrdersService {
      */
     List<Orders> queryAllByLimitByWhere(HashMap<String,Object> map);
 
+    /**
+     * 查询带条件的总数据行数
+     * @param map
+     * @return
+     */
+    int selectOrderCount(HashMap<String,Object> map);
+
 }

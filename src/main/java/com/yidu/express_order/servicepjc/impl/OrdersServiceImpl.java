@@ -98,4 +98,9 @@ public class OrdersServiceImpl implements OrdersService {
     public List<Orders> queryAllByLimitByWhere(HashMap<String,Object> map) {
         return this.ordersDao.queryAllByLimitByWhere(map);
     }
+
+    @Override
+    public int selectOrderCount(HashMap<String, Object> map) {
+        return this.ordersDao.selectOrderCount(map);
+    }
 }

@@ -173,6 +173,43 @@
         <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
             AND DATE_FORMAT(orderTime,'%Y-%m-%d') BETWEEN #{beginTime} AND #{endTime}
         </if>
+        order by orderTime desc
         limit #{offset}, #{limit}
+    </select>
+    <!--查询带条件的总数据行数-->
+    <select id="selectOrderCount" parameterType="Map" resultType="Integer">
+        SELECT
+            count(1)
+        FROM orders WHERE customer_id= #{customerId}
+        <if test="orderState != null">
+            AND orderState= #{orderState}
+        </if>
+        AND
+        (
+        address_Id_direction IN (SELECT address_Id FROM address
+        <where>
+            <if test="addressName != null and addressName != ''">
+                AND address_name = #{addressName}
+            </if>
+            <if test="addressPhone != null and addressPhone != ''">
+                AND address_phone = #{addressPhone}
+            </if>
+        </where>
+        )
+        OR
+        address_Id_sender IN(SELECT address_Id FROM address
+        <where>
+            <if test="addressName != null and addressName != ''">
+                AND address_name = #{addressName}
+            </if>
+            <if test="addressPhone != null and addressPhone != ''">
+                AND address_phone = #{addressPhone}
+            </if>
+        </where>
+        )
+        )
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            AND DATE_FORMAT(orderTime,'%Y-%m-%d') BETWEEN #{beginTime} AND #{endTime}
+        </if>
     </select>
 </mapper>

@@ -98,11 +98,10 @@ public class OrdersController {
      * @param beginTime 选则的订单时间段 开始时间
      * @param endTime 选则的订单时间段  结束时间
      * @param offset 页码
-     * @param limit 页面大小
      * @return
      */
     @RequestMapping("pjcSelectAllOrder")
-    public String pjcSelectAllOrder(HttpServletRequest request, Integer orderState, String addressName, String addressPhone, String beginTime, String endTime, Integer offset, Integer limit){
+    public String pjcSelectAllOrder(HttpServletRequest request, Integer orderState, String addressName, String addressPhone, String beginTime, String endTime, Integer offset){
         HashMap<String,Object> map=new HashMap<>();
         map.put("customerId",1);//当前登录的客户主键id
         map.put("orderState",orderState);
@@ -110,7 +109,9 @@ public class OrdersController {
         map.put("addressPhone",addressPhone);
         map.put("beginTime",beginTime);
         map.put("endTime",endTime);
-        map.put("offset",((offset==null?1:offset)-1)*10);//默认第1页
+        //判断如果当前页面参数等于null就赋值1
+        Integer offsets = offset==null?1:offset;
+        map.put("offset",(offsets-1)*10);//默认第1页
         map.put("limit",10);//默认10行
         //返回 调用ordersService层条件查询订单,并分页的方法
         List<Orders> ordersList = this.ordersService.queryAllByLimitByWhere(map);
@@ -131,6 +132,28 @@ public class OrdersController {
         request.setAttribute("sendAddressList",sendAddressList);
         //将收货地址数据集合存入请求作用域
         request.setAttribute("recAddressList",recAddressList);
+        //调用根据条件查询的数据总行数的方法
+        int count = this.ordersService.selectOrderCount(map);
+        //将总行数存入请求作用域
+        request.setAttribute("count",count);
+        //得到总页数
+        int page=count/10;
+        //判断最后一页还有没有余数
+        if(count%10!=0){
+            //总页数加一
+            page++;
+        }
+        //将总页数存入请求作用域
+        request.setAttribute("page",page);
+        //将当前页面存入请求作用域
+        request.setAttribute("offsets",offsets);
+
+        //将搜索的名字存入请求作用域
+        request.setAttribute("addressName",addressName==""||addressName==null?"w":addressName);
+        //将搜索的手机号存入请求作用域
+        request.setAttribute("addressPhone",addressPhone==""||addressPhone==null?"w":addressPhone);
+        //将选中的订单状态存入请求作用域
+        request.setAttribute("orderState",orderState==null?"10":orderState);
         return "sent";
     }
 }

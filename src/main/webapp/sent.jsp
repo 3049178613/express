@@ -17,7 +17,7 @@
     <title>我的寄件订单</title>
     <meta name="keywords" content="申通快递单号查询,ems快递单号查询,圆通快递查询单号,中通快递单号查询,韵达快递单号查询" />
     <meta name="description" content="提供一站式的快递查询服务，涵盖近百家常用物流快递公司，支持手机快递查询。并为B2C等网络应用提供免费的快递查询接口(api)服务。" />
-    <link rel="shortcut icon" href="img/favicon.gif" />
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/img/favicon.gif" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalCenter/base_v4.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sz/daterangepicker.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/sent_v6.css?version=20201224" />
@@ -200,20 +200,20 @@
             </div>
         </div>
         <div class="order-form">
-            <div class="form-item"><label>快递公司：</label>
+            <div class="form-item"><label>快递类型：</label>
                 <div class="form-wrap"><select>
                     <option value="">全部</option>
-                    <option value="">待接单</option>
-                    <option value="">已取消</option>
-                    <option value="">已揽收</option>
-                    <option value="">已派送</option>
-                    <option value="">已签收</option>
+                    <option value="1">待接单</option>
+                    <option value="0">已取消</option>
+                    <option value="2">已揽收</option>
+                    <option value="3">已派送</option>
+                    <option value="4">已签收</option>
                 </select>
                     <div class="select">全部</div>
                 </div>
             </div>
             <div class="form-item"><label>搜索：</label>
-                <div class="form-wrap"><input placeholder="收件人信息"> <span class="search"></span></div>
+                <div class="form-wrap"><input type="text" class="searchVal" placeholder="收件人信息"> <span class="search"></span></div>
             </div>
             <div class="form-item"><label>寄件时间：</label>
                 <div id="daterange" class="form-wrap">
@@ -232,9 +232,10 @@
                 <th style="text-align: right;">操作</th>
             </tr>
             <tr class="ctrl">
-                <td colspan="6" class="td-paginate"><span>1-10</span> <span>共<strong>1</strong>条</span>
-                    <div class="page-ctrl"><span class="prev disable"></span> <span
-                            class="next disable"></span></div>
+                <td colspan="6" class="td-paginate"><span class="td-paginateFirstSpan">1-10</span> <span>共<strong>${count}</strong>条</span>
+                    <div class="page-ctrl">
+                        <span id="prevs" class="prev disable"></span> <span id="nexts" class="next disable"></span>
+                    </div>
                 </td>
             </tr>
             <!--<tr><iframe src="test.html" width="100%" height="939" frameborder="0"></iframe></tr>-->
@@ -251,7 +252,7 @@
                     </td>
                     <td>全国优选</td>
                     <td>${orders.ordernumber}</td>
-                    <td>前天16:26</td><!-- 寄件时间 -->
+                    <td class="dateTime">${orders.ordertime}</td><!-- 寄件时间 -->
                     <td style="text-align: right;"><span class="txt-status">订单已取消</span></td>
                     <td style="text-align: right;">
                         <div class="ctrl-wrap">
@@ -373,8 +374,13 @@
             </tbody>
         </table>
         <!--分页条begin-->
-        <div class="paginate"><span class="prev disable"></span> <a class="active">1</a> <span
-                class="next disable"></span></div>
+        <div class="paginate">
+            <span id="prev" class="prev disable"></span>
+            <c:forEach var="i" begin="1" end="${page}" step="1">
+                <a class="active page-active">${i}</a>
+            </c:forEach>
+            <span id="next" class="next disable"></span>
+        </div>
         <!--分页条end-->
 
         <!--点击取消订单提交取消原因-->	<!--取消订单弹框being-->
@@ -388,8 +394,7 @@
                 <div class="dialog-body">
                     <div class="reason-wrap">
                         <ul class="reason-list scrollbar">
-                            <li class="reason-item" style="visibility: hidden;"><input type="text"
-                                                                                       placeholder="请输入其他原因"></li>
+                            <li class="reason-item" style="visibility: hidden;"><input type="text" placeholder="请输入其他原因"></li>
                         </ul>
                         <div class="btn-wrap">
                             <!---->
@@ -450,7 +455,7 @@
         display: block;
         width: 50px;
         height: 50px;
-        background: url(https://cdn.kuaidi100.com/images/www/sp-index.png) -287px -206px;
+        background: url(img/sp-index.png) -287px -206px;
     }
 
     .footer-qrcode {
@@ -575,22 +580,133 @@
 <script src="${pageContext.request.contextPath}/js/share/base_v4.js?version=201707191039"></script>
 <script src="${pageContext.request.contextPath}/js/share/user_v4.js?version=201909091000"></script>
 <script src="${pageContext.request.contextPath}/js/share/moment.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/share/daterangepicker.js?vertion=20191031"></script>
+<script src="${pageContext.request.contextPath}/js/share/daterangepicker.js"></script>
 <script src="${pageContext.request.contextPath}/js/share/clipboard.min-20191031.js?vertion=20191031"></script>
-<%--localhost:8080/express/js/util/jquery-migrate-1.4.1.min.js--%>
 <script src="${pageContext.request.contextPath}/js/page/sent_v6.js?version=8"></script>
 </body>
 
 <script type="text/javascript">
-    $(".ctrl").hide();
-    $(".txt-status").click(function(){
-        if($(".ctrl").is(':hidden')){
-            $(".ctrl").show();
-        }else{
-            $(".ctrl").hide();
-        }
+    $(function () {
+        //得到当前日期
+        var date=new Date();
+        //日
+        var day = date.getDate();
+        //月
+        var month = date.getMonth()+1;
 
-    })
+        var year = date.getFullYear();
+        //循环所有时间
+        $(".dateTime").each(function () {
+            var zuotian=$(this).text().split(" ")[1];
+            //拿到日
+            var days=$(this).text().split(" ")[0].split("-")[2];
+            //拿到月
+            var months=$(this).text().split(" ")[0].split("-")[1];
+            //拿到年
+            var years=$(this).text().split(" ")[0].split("-")[0];
+            //判断是同一天
+            if(days==day && months==month && year==years){
+                $(this).text(""+$(this).text().split(" ")[1])
+            }else if((day-days)==1 && months==month && year==years){
+                //昨天
+                $(this).text("昨天"+zuotian.split(":")[0]+":"+zuotian.split(":")[1])
+            }else if((day-days)==2 && months==month && year==years){
+                //前天
+                $(this).text("前天"+zuotian.split(":")[0]+":"+zuotian.split(":")[1])
+            }else{
+                $(this).text($(this).text().split(" ")[0])
+            }
+        });
+        //初始化 隐藏订单下面的订单详情
+        $("#listBody").children(".ctrl").hide();
+
+        //得到当前页面
+        var offsets=${offsets};
+        //设置显示当前页面的数字样式
+        $(".page-active").each(function () {
+           if($(this).text()==offsets){
+               $(this).css("color","#317ee7");
+           }else{
+               $(this).css("color","#888");
+           }
+        })
+        //得到总页数
+       var page = ${page};
+        /*判断总页数是否大于当前页数*/
+        if (page>offsets){
+            $("#next").removeClass("next disable").addClass("next");
+            $("#nexts").removeClass("next disable").addClass("next");
+            //下一页添加点击事件
+            $(".next").click(function () {
+                window.location.href="pjcSelectAllOrder?offset="+(offsets+1);
+            })
+        }
+        if(offsets>1){
+            $("#prev").removeClass("prev disable").addClass("prev");
+            $("#prevs").removeClass("prev disable").addClass("prev");
+            //上一页添加点击事件
+            $(".prev").click(function () {
+                window.location.href="pjcSelectAllOrder?offset="+(offsets-1);
+            })
+        }
+        //例如1页1-10  2页 11-20 ......
+        $(".td-paginateFirstSpan").text(((offsets*10)-9)+"-"+(offsets*10));
+
+         //赋值搜索框
+        var addressName = '${addressName}';
+        var addressPhone = '${addressPhone}';
+        //判断收/寄名字不等于空
+        if(addressName!="w"){
+             $(".searchVal").val(addressName);
+        }else if(addressPhone!="w"){
+             $(".searchVal").val(addressPhone);
+        }
+        //赋值选中订单状态的下拉列表
+        var orderState=${orderState};
+        //循环所有的订单状态
+        $(".form-wrap>select>option").each(function () {
+            //判断上次选中的订单状态和下拉列表里面的订单状态相同
+            if (orderState==$(this).val()){
+                $(this).attr("selected",true);
+            }else{
+                $(this).attr("selected",false);
+            }
+        })
+    });
+    //给订单状态添加点击事件(目的显示订单下面隐藏的订单详情tr)
+    $(".txt-status").click(function(){
+        if($(this).parent().parent().next(".ctrl").is(':hidden')){
+            $("#listBody").children(".ctrl").hide();
+            $(this).parent().parent().next(".ctrl").show();
+        }else{
+            $(this).parent().parent().next(".ctrl").hide();
+        }
+    });
+    //给下面的当前页面数字添加点击事件
+    $(".page-active").click(function () {
+        window.location.href="pjcSelectAllOrder?offset="+$(this).text();
+    });
+    /*给选中快递类型添加点击事件*/
+    $(".form-wrap>select>option").click(function () {
+        $(this).parent().next(".select").text($(this).text());
+        var nameOrPhone="";
+        if((/^(0\d{2}-\d{7,8}|0\d{3}-\d{7,8}|1[345678]\d{9})$/).test($(".searchVal").val())){
+            nameOrPhone="addressPhone"
+        }else{
+            nameOrPhone="addressName"
+        }
+        window.location.href="pjcSelectAllOrder?orderState="+$(this).val()+"&"+nameOrPhone+"="+$(".searchVal").val();
+    });
+    /*给搜索框添加点击事件*/
+    $(".search").click(function () {
+        var nameOrPhone="";
+        if((/^(0\d{2}-\d{7,8}|0\d{3}-\d{7,8}|1[345678]\d{9})$/).test($(".searchVal").val())){
+            nameOrPhone="addressPhone"
+        }else{
+            nameOrPhone="addressName"
+        }
+        window.location.href="pjcSelectAllOrder?orderState="+$(".form-wrap>select").val()+"&"+nameOrPhone+"="+$(".searchVal").val();
+    });
 
 </script>
 </html>
