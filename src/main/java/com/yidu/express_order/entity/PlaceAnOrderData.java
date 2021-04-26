@@ -49,6 +49,10 @@ public class PlaceAnOrderData implements Serializable {
      * 物品重量
      */
     private Integer goodsWeight;
+    /**
+     * 预计价格
+     */
+    private Integer predictPrice;
 
     public String getSendName() {
         return sendName;
@@ -130,6 +134,14 @@ public class PlaceAnOrderData implements Serializable {
         this.goodsWeight = goodsWeight;
     }
 
+    public Integer getPredictPrice() {
+        return predictPrice;
+    }
+
+    public void setPredictPrice(Integer predictPrice) {
+        this.predictPrice = predictPrice;
+    }
+
     @Override
     public String toString() {
         return "PlaceAnOrderData{" +
@@ -143,6 +155,7 @@ public class PlaceAnOrderData implements Serializable {
                 ", recAddr='" + recAddr + '\'' +
                 ", goodsType='" + goodsType + '\'' +
                 ", goodsWeight=" + goodsWeight +
+                ", predictPrice=" + predictPrice +
                 '}';
     }
 }

@@ -1,6 +1,6 @@
 package com.yidu.express_order.servicepjc;
 
-import com.yidu.express_order.entity.Orders;
+import com.yidu.express_order.daopjc.Orders;
 
 import java.util.HashMap;
 import java.util.List;
@@ -76,5 +76,6 @@ public interface OrdersService {
      * @return
      */
     int selectOrderCount(HashMap<String,Object> map);
+
 
 }

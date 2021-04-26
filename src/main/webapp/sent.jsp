@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sz/daterangepicker.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/sent_v6.css?version=20201224" />
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/home_page/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/layui/css/layui.css"></script>
 </head>
 <body id="indexBody">
 <style>
@@ -256,6 +257,7 @@
                     <td style="text-align: right;"><span class="txt-status">订单已取消</span></td>
                     <td style="text-align: right;">
                         <div class="ctrl-wrap">
+                            <span class="td-warn">取消订单</span>
                         </div>
                     </td>
                 </tr>
@@ -337,7 +339,7 @@
                                                     <div class="label">订&nbsp;单&nbsp;号：</div>
                                                     <!-- 订单号 -->
                                                     <div class="info">${orders.ordernumber} <span
-                                                            data-clipboard-text="100012022606553"
+                                                            data-clipboard-text="${orders.ordernumber}"
                                                             class="copy">复制</span></div>
                                                 </div>
                                                 <!---->
@@ -583,6 +585,7 @@
 <script src="${pageContext.request.contextPath}/js/share/daterangepicker.js"></script>
 <script src="${pageContext.request.contextPath}/js/share/clipboard.min-20191031.js?vertion=20191031"></script>
 <script src="${pageContext.request.contextPath}/js/page/sent_v6.js?version=8"></script>
+<script src="${pageContext.request.contextPath}/layui/layui.js"></script>
 </body>
 
 <script type="text/javascript">
@@ -708,5 +711,20 @@
         window.location.href="pjcSelectAllOrder?orderState="+$(".form-wrap>select").val()+"&"+nameOrPhone+"="+$(".searchVal").val();
     });
 
+    //复制
+    var clipboard = new ClipboardJS('.copy');
+    layui.use(['layer','laydate'], function() {
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        clipboard.on('success', function (e) {
+            layer.msg('复制成功！');
+            console.log(e);
+        });
+
+        clipboard.on('error', function (e) {
+            layer.msg('复制失败');
+            console.log(e);
+        });
+    });
 </script>
 </html>

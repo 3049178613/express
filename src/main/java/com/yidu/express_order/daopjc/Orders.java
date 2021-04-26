@@ -1,4 +1,4 @@
-package com.yidu.express_order.entity;
+package com.yidu.express_order.daopjc;
 
 import org.springframework.stereotype.Component;
 

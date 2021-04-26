@@ -381,13 +381,13 @@
 	cursor: pointer;
 }
 
-/*.page-ctrl .prev.disable,
+.page-ctrl .prev.disable,
 .page-ctrl .next.disable,
 .paginate .prev.disable,
 .paginate .next.disable {
 	opacity: .5;
 	cursor: default;
-}*/
+}
 
 .page-ctrl .prev,
 .paginate .prev {

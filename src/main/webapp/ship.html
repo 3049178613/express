@@ -14,13 +14,10 @@
 <link rel="stylesheet" href="css/personalCenter/base_v4.css" />
 <link rel="stylesheet" href="css/sz/sent_v4_new.css?version=201909101510"/>
 <link rel="stylesheet" href="css/sz/courier_v6.css?version=20210302"/>
-<script src="js/util/jquery-1.12.1.min.js"></script>
-<script src="js/util/jquery-migrate-1.4.1.min.js"></script>
   <!--地址插件begin-->
   <link href="city_picker/css/city-picker.css" rel="stylesheet">
   <!--地址插件end-->
 <link rel="stylesheet" href="layui/css/layui.css"  media="all">
-  <script src="js/share/daterangepicker.js"></script>
 </head>
 <style>
   .newMyOrder {
@@ -246,7 +243,7 @@
       </div>
         <div class="newsent-info clearfix">
         <div class="newsent-title" style="margin-bottom: 26px;">
-          <a class="newMyOrder" href="" class="order-list" target="_blank">我的订单</a>
+          <a class="newMyOrder" href="orders/pjcSelectAllOrder" class="order-list">我的订单</a>
           <div class="newsent-info-own cp" v-if="showOwn" @click="goUrl('/courier/indexOld.jsp')">专属快递员下单, 点这里 &gt;</div>
           <div class="notice" v-if="announcement" @click="showNotice">
             <div class="notice-main">{{announcement}}</div>
@@ -493,7 +490,7 @@
       <div class="newsent-submit" :class="{fixed: fixedBar, 'newsent-title_line': !fixedBar}">
         <div class="newsent-submit-fee ib">
           <span>预计运费：</span>
-          <span v-if="newMoney">{{newMoney}}</span>
+          <span class="predictMoney">---</span>
           <span v-else>{{showPrice ? kdItem.com === 'kuaidi100' ? subData.valinspay ? valinsFee + Number(money) : (+money).toFixed(1) : Number(money) : '--'}}</span>
           <span>元</span>
         </div>
@@ -548,7 +545,7 @@
       <div id="scroll_s" class="newsent-submit bottomFloat" :class="{fixed: fixedBar, 'newsent-title_line': !fixedBar}">
         <div class="newsent-submit-fee ib">
           <span>预计运费：</span>
-          <span v-if="newMoney">{{newMoney}}</span>
+          <span class="predictMoneys">---</span>
           <span v-else>{{showPrice ? kdItem.com === 'kuaidi100' ? subData.valinspay ? valinsFee + Number(money) : (+money).toFixed(1) : Number(money) : '--'}}</span>
           <span>元</span>
         </div>
@@ -760,30 +757,6 @@
 </div>
 <script>
 (function(a,h,c,b,f,g){a["UdeskApiObject"]=f;a[f]=a[f]||function(){(a[f].d=a[f].d||[]).push(arguments)};g=h.createElement(c);g.async=1;g.charset="utf-8";g.src=b;c=h.getElementsByTagName(c)[0];c.parentNode.insertBefore(g,c)})(window,document,"script","//assets-cli.udesk.cn/im_client/js/udeskApi.js","ud");
-/*ud({
-    "code": "298f17ga",
-    "link": "https://kuaidi100.udesk.cn/im_client/?web_plugin_id=48851",
-    targetSelector: "#uDeskTarget"
-});*/
-function loadUpdate() {
-  var now = (new Date()).getTime(),last = (new Date("2018/08/04 07:00:00")).getTime();
-  var closeTime = getcookie("udpate"),dom = $("#updateNotice"),closeTime = +getcookie("noticeCloseTime");
-  if(now > last || (now - closeTime - 24*3600*1000) < 0) {
-    dom.remove();
-  } else {
-    dom.show();
-  }
- $("#noticeClose").click(function(event) {
-   setcookie("noticeCloseTime",now);
-   dom.remove();
- });
-}
-window.onload = function(){
-  loadUpdate();
-}
-/*document.getElementById("viewH5").addEventListener("click", function() {
-  window.open("https://m.kuaidi100.com?coname=www", '_blank', 'width=375px, height=667px, toolbar =no, menubar=no, scrollbars=no, resizable=no, location=no, status=no')
-})*/
 function gototop() {
   acceleration = 0.3;
   time = 15;
@@ -803,27 +776,28 @@ function gototop() {
   }
 }
 </script>
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="js/ship/vue.js"></script>
+  <script src="js/ship/jquery-1.12.1.min.js"></script>
+  <script src="js/ship/jquery-migrate-1.4.1.min.js"></script>
+  <script src="js/ship/base_v4.js"></script>
+  <script src="js/ship/city_new.js"></script>
+  <script src="js/ship/user_v4.js"></script>
+  <script src="js/ship/areas.js"></script>
+  <!--<script src="js/ship/maps.js"></script>-->
+  <!--<script src="https://cdn.kuaidi100.com/js/share/count.js?version=201707191039"></script>-->
+  <script src="js/ship/sent_v6.js"></script>
+  <script src="js/ship/couponPop.js"></script>
 
-
-<script src="js/share/vue.js"></script>
-<script src="js/share/base_v4.js?version=201707191039"></script>
-<script src="js/share/user_v4.js?version=201909091000"></script>
-<!--<script src="js/share/count.js?version=201707191039"></script>-->
-<script src="js/share/city_new.js"></script>
-<script src="js/page/sent_v6.js?version=20210302"></script>
-<script src="js/share/couponPop.js?version=201911081400"></script>
-<script src="js/util/jquery-1.12.1.min.js"></script>
-<!--地址插件begin-->
+  <!--地址插件begin-->
   <script src="city_picker/js/jquery.js"></script>
   <script src="city_picker/js/city-picker.data.js"></script>
   <script src="city_picker/js/city-picker.js"></script>
   <!--地址插件end-->
-<script src="layui/layui.js" charset="utf-8"></script>
+  <script src="layui/layui.js" charset="utf-8"></script>
 <script>
-
   //申明变量判断是点击了左边还是右边的地址簿
   var leftReght=""
-
   /*立即下单按钮*/
   $(".atOnceBelowOne").click(function () {
     //判断用户是否已经登录了
@@ -895,10 +869,10 @@ function gototop() {
         $("#newsent-half-content-err").show();
       }
     var goodsWeight=$("input[type='number']").val();//物品重量
-
-    alert(sendName+"---"+recName+"---"+sendMobile+"---"+recMobile+"---"+sendAddress+"---"+sendAddr+"---"+recAddress+"---"+recAddr+"----"+goodsType+"----"+goodsWeight);
+    var predictPrice = $(".predictMoney").text();//预估价格
+    alert(sendName+"---"+recName+"---"+sendMobile+"---"+recMobile+"---"+sendAddress+"---"+sendAddr+"---"+recAddress+"---"+recAddr+"----"+goodsType+"----"+goodsWeight+"----"+predictPrice);
     //调用提交订单的方法
-    submitOrder(sendName,recName,sendMobile,recMobile,sendAddress,sendAddr,recAddress,recAddr,goodsType,goodsWeight);
+    submitOrder(sendName,recName,sendMobile,recMobile,sendAddress,sendAddr,recAddress,recAddr,goodsType,goodsWeight,predictPrice);
     }else{
         //显示登录弹框
         $("#loginWraps").removeClass("frame hidden").addClass("frame");
@@ -907,7 +881,6 @@ function gototop() {
 
   /*左边清空已填信息按钮添加点击事件，目的是清空已经选中的地址信息*/
   $(".showSendClear").click(function () {
-    alert(222)
     $("#sendAddress").val("");
     $(this).parent().children("div").children("div").children("div").children("span").children("span").text("请选择省/市/区");
     $(this).hide();
@@ -918,7 +891,6 @@ function gototop() {
   });
   /*右边清空已填信息按钮添加点击事件，目的是清空已经选中的地址信息*/
   $(".showRecClear").click(function () {
-    alert(111)
     $("#recAddress").val("");
     $(this).parent().children("div").children("div").children("div").children("span").children("span").text("请选择省/市/区");
     $(this).hide();
@@ -1014,7 +986,8 @@ function gototop() {
     if ($("#sendAddress").val()!=""){
       $(".showSendClear").show()
     }
-
+    //调用预估价格的方法
+    calculatePrice($("input[type='number']").val());
   });
   /*监听收件地址*/
   $(".recAddress-right").on("click",function () {
@@ -1031,6 +1004,8 @@ function gototop() {
     if ($("#recAddress").val()!=""){
       $(".showRecClear").show();
     }
+    //调用预估价格的方法
+    calculatePrice($("input[type='number']").val());
   })
   /*监听寄件详细地址*/
   $("input[validrole='sendAddr']").on("input",function () {
@@ -1075,7 +1050,40 @@ function gototop() {
       $("#newsent-half-content-err").hide();
       $("#newsent-half-content-err").attr("name","true");
     }
+    //调用预估价格的方法
+    calculatePrice($("input[type='number']").val());
   });
+
+  /*预估价格*/
+  function calculatePrice(goodsWeight){
+    var price=0;
+    var sendAddress = $("#sendAddress").val().split("/");
+    var recAddress = $("#recAddress").val().split("/");
+        if (sendAddress.length>2 && recAddress.length>2){
+          if (sendAddress[0]==recAddress[0]){
+              //同省
+            price=8+goodsWeight*3;
+            if (sendAddress[1]==recAddress[1]){
+              //同市
+              price=8+goodsWeight*2;
+            }
+          }else{
+            //不是同省
+            price=12+goodsWeight*6;
+          }
+          //判断必须要选了物品类型才能显示价格
+          var goodsType=""; //物品类型
+          $(".newsent-goods-main-name").each(function () {
+            if($(this).attr("name")=="true"){
+              goodsType=$(this).text();
+            }
+          })
+          if(goodsType!=""){
+            $(".predictMoney").text(price);
+            $(".predictMoneys").text(price);
+          }
+        }
+  }
   /*监听物品重量*/
   $("input[type='number']").on("input",function () {
       if((/^([12][0-9]|30|[1-9])$/).test($(this).val())){
@@ -1083,18 +1091,21 @@ function gototop() {
       }else{
         $(this).parent().next("span").next("div").attr("name","false");
       }
+    //调用预估价格的方法
+    calculatePrice($(this).val());
   });
 
   /*下单传递数据到后台*/
-  function submitOrder(sendName,recName,sendMobile,recMobile,sendAddress,sendAddr,recAddress,recAddr,goodsType,goodsWeight) {
+  function submitOrder(sendName,recName,sendMobile,recMobile,sendAddress,sendAddr,recAddress,recAddr,goodsType,goodsWeight,predictPrice) {
     var result="";
+    //判断都已经填写了
     $(".newsent-half-content-err").each(function () {
         if($(this).attr("name")=="false"){
           result="niub";
         }
     });
     if(result==""){
-      window.location.href="orders/pjcInsertOrders?sendName="+sendName+"&recName="+recName+"&sendMobile="+sendMobile+"&recMobile="+recMobile+"&sendAddress="+sendAddress+"&sendAddr="+sendAddr+"&recAddress="+recAddress+"&recAddr="+recAddr+"&goodsType="+goodsType+"&goodsWeight="+goodsWeight;
+      window.location.href="orders/pjcInsertOrders?sendName="+sendName+"&recName="+recName+"&sendMobile="+sendMobile+"&recMobile="+recMobile+"&sendAddress="+sendAddress+"&sendAddr="+sendAddr+"&recAddress="+recAddress+"&recAddr="+recAddr+"&goodsType="+goodsType+"&goodsWeight="+goodsWeight+"&predictPrice="+predictPrice;
     }else{
       layui.use('table', function(){
         layui.layer.msg("请正确输入信息哦！",{icon:5,title:"<h1>下单失败</h1>"});
@@ -1102,7 +1113,7 @@ function gototop() {
     }
   };
 
-/*左边地址簿添加点击事件*/
+  /*左边地址簿添加点击事件*/
   $("#showContact").click(function () {
       $("#float").removeClass("float-box hidden").addClass("float-box");
       $("#contactBox").removeClass("float-body hidden contact-box").addClass("float-body contact-box");
@@ -1148,7 +1159,6 @@ function gototop() {
           var district=$(this).parent().prev(".col2").children("span:eq(1)").children("span:eq(2)").text();
           //详细地址
           var street=$(this).parent().prev(".col2").children("span:eq(1)").children("span:eq(3)").text();
-           alert(addressName+"----"+addressPhone+"-----"+province+"/"+city+"/"+district+"/"+street)
           if (leftReght=="left"){
             //调用赋值的方法
             setLeftVal(addressName,addressPhone,province,city,district,street);
@@ -1164,7 +1174,6 @@ function gototop() {
 
   //地址簿赋值給左边input
   function setLeftVal(addressName,addressPhone,province,city,district,street){
-    alert(addressName+"----"+addressPhone+"-----"+province+"/"+city+"/"+district+"/"+street)
     $("input[validrole='sendName']").val(addressName)
     $("input[validrole='sendMobile']").val(addressPhone)
     /*$("#sendAddress").citypicker();*/
@@ -1189,7 +1198,6 @@ function gototop() {
   }
   //地址簿赋值給右边input
   function setRightVal(addressName,addressPhone,province,city,district,street){
-    alert(addressName+"----"+addressPhone+"-----"+province+"/"+city+"/"+district+"/"+street)
     $("input[validrole='recName']").val(addressName)
     $("input[validrole='recMobile']").val(addressPhone)
    /* $("#recAddress").citypicker();*/
@@ -1217,6 +1225,7 @@ function gototop() {
   $("#searchContactBtn").click(function () {
     //调用追加地址簿的方法
     showAddress();
+
   });
 
   /*给关闭地址簿添加点击事件*/

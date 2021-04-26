@@ -47,7 +47,7 @@ void 0 === Object.defineProperty || isOldIE() ? $("body").append(
 		move: null,
 		isLeft: !1,
 		fixedBar: !1,
-		/*subData: {
+		subData: {
 			platform: "WWW",
 			formid: "",
 			orderSource: "WWW_DISPATCH",
@@ -70,7 +70,7 @@ void 0 === Object.defineProperty || isOldIE() ? $("body").append(
 			gotaddr: "",
 			valinspay: "",
 			doortime: "请选择上门时间"
-		},*/
+		},
 		sendContent: null,
 		recContent: null,
 		goods: null,
@@ -951,9 +951,9 @@ void 0 === Object.defineProperty || isOldIE() ? $("body").append(
 					}
 				}) : vm.goLogin()
 			};
-		/*this.goodsList(), this.map = new AMap.Map("send-map", {
+		this.goodsList(), this.map = new AMap.Map("send-map", {
 			resizeEnable: !0
-		});*/
+		});
 		var i = this;
 		this.map.plugin("AMap.Geolocation", function() {
 			i.geolocation = new AMap.Geolocation({

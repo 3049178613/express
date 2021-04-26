@@ -1,6 +1,6 @@
 package com.yidu.express_order.servicepjc.impl;
 
-import com.yidu.express_order.entity.Orders;
+import com.yidu.express_order.daopjc.Orders;
 import com.yidu.express_order.daopjc.OrdersDao;
 import com.yidu.express_order.servicepjc.OrdersService;
 import org.springframework.stereotype.Service;

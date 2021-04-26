@@ -1,9 +1,8 @@
 package com.yidu.express_order.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import com.yidu.express_order.entity.Address;
 import com.yidu.express_order.entity.Goods;
-import com.yidu.express_order.entity.Orders;
+import com.yidu.express_order.daopjc.Orders;
 import com.yidu.express_order.entity.PlaceAnOrderData;
 import com.yidu.express_order.servicepjc.AddressService;
 import com.yidu.express_order.servicepjc.GoodsService;
@@ -14,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * (Orders)表控制层
@@ -44,6 +40,7 @@ public class OrdersController {
     @Resource
     private GoodsService goodsService;
 
+
     @ResponseBody
     @RequestMapping("pjcInsertOrders")
     public String pjcInsertOrders(PlaceAnOrderData placeAnOrderData) {
@@ -65,7 +62,12 @@ public class OrdersController {
         }
         //从session中获取下单用户的主键
         orders.setCustomerId(1);
-        orders.setOrdernumber(("KD" + new SimpleDateFormat("yyyyMMddHH").format(new Date())));//订单号
+        Random random=new Random();
+        int i = random.nextInt(1000);
+        int k = (random.nextInt(9)+1)*1000;
+        String yyyyMM = new SimpleDateFormat("yyyyMM").format(new Date());
+        //订单号
+        orders.setOrdernumber(("KD"+yyyyMM+(i+k)));
         //订单支付方式
         orders.setPayWay(1);
 
@@ -77,6 +79,9 @@ public class OrdersController {
         goods.setGoodstype(placeAnOrderData.getGoodsType());
         //物品重量
         goods.setGoodsweight(placeAnOrderData.getGoodsWeight());
+        //预估价格
+        Integer predictPrice = placeAnOrderData.getPredictPrice();
+        goods.setEstimateprice(predictPrice==null||predictPrice==0?8:predictPrice);
         //包裹数量
         goods.setNumber(1);
         //包裹状态

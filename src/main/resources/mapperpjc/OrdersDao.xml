@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yidu.express_order.daopjc.OrdersDao">
 
-    <resultMap id="BaseResultMap" type="com.yidu.express_order.entity.Orders">
+    <resultMap id="BaseResultMap" type="com.yidu.express_order.daopjc.Orders">
         <!--@Table orders-->
         <result property="orderId" column="order_Id" jdbcType="INTEGER"/>
         <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
@@ -74,9 +74,8 @@
     <!--新增所有列-->
     <insert id="insert" keyProperty="orderId" useGeneratedKeys="true">
         insert into express.orders(customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id)
-        values (#{customerId},now(), 1, #{ordernumber}, #{addressIdDirection}, #{addressIdSender}, #{payWay}, #{updatetime}, #{userId})
+        values (#{customerId},now(), 1,#{ordernumber}, #{addressIdDirection}, #{addressIdSender}, #{payWay}, #{updatetime}, #{userId})
     </insert>
-
     <!--通过主键修改数据-->
     <update id="update">
         update express.orders

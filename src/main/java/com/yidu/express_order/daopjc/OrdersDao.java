@@ -1,6 +1,5 @@
 package com.yidu.express_order.daopjc;
 
-import com.yidu.express_order.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -69,7 +68,7 @@ public interface OrdersDao {
     int deleteById(Integer orderId);
 
     /**
-     * 找寻刚刚新增的订单数据主键Id
+     * 找寻刚刚新增的订单数据
      * @param size 数量
      * @return
      */
