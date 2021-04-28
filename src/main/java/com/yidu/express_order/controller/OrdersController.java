@@ -1,12 +1,10 @@
 package com.yidu.express_order.controller;
 
-import com.yidu.express_order.entity.Address;
-import com.yidu.express_order.entity.Goods;
-import com.yidu.express_order.daopjc.Orders;
-import com.yidu.express_order.entity.PlaceAnOrderData;
+import com.yidu.express_order.entity.*;
 import com.yidu.express_order.servicepjc.AddressService;
 import com.yidu.express_order.servicepjc.GoodsService;
 import com.yidu.express_order.servicepjc.OrdersService;
+import com.yidu.express_order.servicepjc.StieService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +38,11 @@ public class OrdersController {
     @Resource
     private GoodsService goodsService;
 
+    /**
+     * 网点服务对象
+     */
+    @Resource
+    private StieService stieService;
 
     @ResponseBody
     @RequestMapping("pjcInsertOrders")
@@ -86,10 +89,27 @@ public class OrdersController {
         goods.setNumber(1);
         //包裹状态
         goods.setGoodsState(1);
+       /* //调用根据就近地址查询的网点方法
+        Integer stieId = this.stieService.selectStreetByAddress(placeAnOrderData.getSendAddress(), placeAnOrderData.getSendAddr());
+        if(stieId!=null){
+            //网点id
+            goods.setStieId(stieId);
+            System.out.println(stieId+"-------------------");
+        }else{
+            //创建订单类
+            Orders orderState=new Orders();
+            //订单状态
+            orderState.setOrderstate(7);
+            //订单id
+            orderState.setOrderId(insertOrder.getOrderId());
+            //调用修改订单状态的方法
+            this.ordersService.update(orderState);
+            System.out.println("-------------------"+stieId);
+        }*/
         //引用订单主键id
-        goods.setOrderId(orders.getOrderId());
+        goods.setOrderId(insertOrder.getOrderId());
         //调用新增包裹的方法
-        goodsService.insert(goods);
+        this.goodsService.insert(goods);
         //跳转下单成功的支付页面
         return "ok";
     }
@@ -160,5 +180,18 @@ public class OrdersController {
         //将选中的订单状态存入请求作用域
         request.setAttribute("orderState",orderState==null?"10":orderState);
         return "sent";
+    }
+
+    /**
+     * 取消订单的方法
+     * @param orders
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("pjcUpdateState")
+    public String pjcUpdateState(Orders orders){
+        orders.setOrderstate(0);
+        ordersService.update(orders);
+        return "修改成功！";
     }
 }

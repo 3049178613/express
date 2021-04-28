@@ -1,6 +1,4 @@
-package com.yidu.express_order.daopjc;
-
-import org.springframework.stereotype.Component;
+package com.yidu.express_order.entity;
 
 import java.io.Serializable;
 
@@ -8,11 +6,10 @@ import java.io.Serializable;
  * (Orders)实体类
  *
  * @author makejava
- * @since 2021-04-15 22:16:11
+ * @since 2021-04-26 14:38:02
  */
-@Component
 public class Orders implements Serializable {
-    private static final long serialVersionUID = -87448388379988361L;
+    private static final long serialVersionUID = 223062412269309961L;
     /**
      * 主键
      */
@@ -59,6 +56,10 @@ public class Orders implements Serializable {
      * 用户表主键
      */
     private Integer userId;
+    /**
+     * 取消订单原因
+     */
+    private String reasonofcancellation;
 
 
     public Integer getOrderId() {
@@ -141,4 +142,28 @@ public class Orders implements Serializable {
         this.userId = userId;
     }
 
+    public String getReasonofcancellation() {
+        return reasonofcancellation;
+    }
+
+    public void setReasonofcancellation(String reasonofcancellation) {
+        this.reasonofcancellation = reasonofcancellation;
+    }
+
+    @Override
+    public String toString() {
+        return "Orders{" +
+                "orderId=" + orderId +
+                ", customerId=" + customerId +
+                ", ordertime='" + ordertime + '\'' +
+                ", orderstate=" + orderstate +
+                ", ordernumber='" + ordernumber + '\'' +
+                ", addressIdDirection=" + addressIdDirection +
+                ", addressIdSender=" + addressIdSender +
+                ", payWay=" + payWay +
+                ", updatetime='" + updatetime + '\'' +
+                ", userId=" + userId +
+                ", reasonofcancellation='" + reasonofcancellation + '\'' +
+                '}';
+    }
 }

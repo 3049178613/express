@@ -1,6 +1,9 @@
 package com.yidu.express_order.servicepjc;
 
-import com.yidu.express_order.daopjc.Orders;
+
+
+import com.yidu.express_order.entity.Orders;
+import com.yidu.express_order.entity.Stie;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +47,7 @@ public interface OrdersService {
      * @param orders 实例对象
      * @return 实例对象
      */
-    Orders update(Orders orders);
+    int update(Orders orders);
 
     /**
      * 通过主键删除数据
@@ -76,6 +79,5 @@ public interface OrdersService {
      * @return
      */
     int selectOrderCount(HashMap<String,Object> map);
-
 
 }

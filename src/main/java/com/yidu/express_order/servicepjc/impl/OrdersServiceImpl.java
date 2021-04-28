@@ -1,7 +1,8 @@
 package com.yidu.express_order.servicepjc.impl;
 
-import com.yidu.express_order.daopjc.Orders;
+
 import com.yidu.express_order.daopjc.OrdersDao;
+import com.yidu.express_order.entity.Orders;
 import com.yidu.express_order.servicepjc.OrdersService;
 import org.springframework.stereotype.Service;
 
@@ -52,8 +53,6 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public Orders insert(Orders orders) {
         int insert = this.ordersDao.insert(orders);
-
-
         //调用查询刚刚新增订单的数据
         return ordersDao.justNewAddOrderId(1);
     }
@@ -65,9 +64,8 @@ public class OrdersServiceImpl implements OrdersService {
      * @return 实例对象
      */
     @Override
-    public Orders update(Orders orders) {
-        this.ordersDao.update(orders);
-        return this.queryById(orders.getOrderId());
+    public int update(Orders orders) {
+        return this.ordersDao.update(orders);
     }
 
     /**

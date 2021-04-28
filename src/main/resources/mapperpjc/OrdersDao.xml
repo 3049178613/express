@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yidu.express_order.daopjc.OrdersDao">
 
-    <resultMap id="BaseResultMap" type="com.yidu.express_order.daopjc.Orders">
+    <resultMap id="BaseResultMap" type="com.yidu.express_order.entity.Orders">
         <!--@Table orders-->
         <result property="orderId" column="order_Id" jdbcType="INTEGER"/>
         <result property="customerId" column="customer_id" jdbcType="INTEGER"/>
@@ -14,12 +14,13 @@
         <result property="payWay" column="Pay_way" jdbcType="INTEGER"/>
         <result property="updatetime" column="updateTime" jdbcType="VARCHAR"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="reasonofcancellation" column="reasonOfCancellation" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">
         select
-          order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id
+           order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id, reasonOfCancellation
         from express.orders
         where order_Id = #{orderId}
     </select>
@@ -27,7 +28,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="BaseResultMap">
         select
-          order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id
+            order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id, reasonOfCancellation
         from express.orders
         limit #{offset}, #{limit}
     </select>
@@ -35,7 +36,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="BaseResultMap">
         select
-          order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id
+            order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id, reasonOfCancellation
         from express.orders
         <where>
             <if test="orderId != null">
@@ -68,14 +69,18 @@
             <if test="userId != null">
                 and user_id = #{userId}
             </if>
+            <if test="reasonOfCancellation!=null and reasonOfCancellation!=''">
+                and reasonOfCancellation = #{reasonOfCancellation}
+            </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="orderId" useGeneratedKeys="true">
-        insert into express.orders(customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id)
-        values (#{customerId},now(), 1,#{ordernumber}, #{addressIdDirection}, #{addressIdSender}, #{payWay}, #{updatetime}, #{userId})
+        insert into express.orders(customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id, reasonOfCancellation)
+        values (#{customerId}, now(), 1, #{ordernumber}, #{addressIdDirection}, #{addressIdSender}, #{payWay}, #{updatetime}, #{userId}, #{reasonofcancellation})
     </insert>
+
     <!--通过主键修改数据-->
     <update id="update">
         update express.orders
@@ -106,6 +111,9 @@
             </if>
             <if test="userId != null">
                 user_id = #{userId},
+            </if>
+            <if test="reasonofcancellation!=null and reasonofcancellation!=''">
+                reasonOfCancellation = #{reasonofcancellation}
             </if>
         </set>
         where order_Id = #{orderId}
@@ -140,7 +148,7 @@
     <!--条件查询订单,并分页-->
     <select id="queryAllByLimitByWhere" resultMap="BaseResultMap" parameterType="Map">
         SELECT
-        order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id
+        order_Id, customer_id, orderTime, orderState, orderNumber, address_Id_direction, address_Id_sender, Pay_way, updateTime, user_id, reasonOfCancellation
         FROM orders WHERE customer_id= #{customerId}
         <if test="orderState != null">
             AND orderState= #{orderState}

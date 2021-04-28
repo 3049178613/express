@@ -254,10 +254,31 @@
                     <td>全国优选</td>
                     <td>${orders.ordernumber}</td>
                     <td class="dateTime">${orders.ordertime}</td><!-- 寄件时间 -->
-                    <td style="text-align: right;"><span class="txt-status">订单已取消</span></td>
+                    <td style="text-align: right;">
+                        <c:choose>
+                            <c:when test="${orders.orderstate==1}">
+                            <span class="txt-status">待接单</span>
+                            </c:when>
+                            <c:when test="${orders.orderstate==0}">
+                                <span class="txt-status">订单已取消</span>
+                            </c:when>
+                            <c:when test="${orders.orderstate==2}">
+                                <span class="txt-status">已揽收</span>
+                            </c:when>
+                            <c:when test="${orders.orderstate==3}">
+                                <span class="txt-status">已派送</span>
+                            </c:when>
+                            <c:when test="${orders.orderstate==4}">
+                                <span class="txt-status">已签收</span>
+                            </c:when>
+                        </c:choose>
+                    </td>
                     <td style="text-align: right;">
                         <div class="ctrl-wrap">
+                            <c:if test="${orders.orderstate==1 || orders.orderstate==2}">
                             <span class="td-warn">取消订单</span>
+                            <span style="display: none">${orders.orderId}</span>
+                            </c:if>
                         </div>
                     </td>
                 </tr>
@@ -396,7 +417,45 @@
                 <div class="dialog-body">
                     <div class="reason-wrap">
                         <ul class="reason-list scrollbar">
-                            <li class="reason-item" style="visibility: hidden;"><input type="text" placeholder="请输入其他原因"></li>
+                            <li class="reason-item" >
+                                <label class="label-wrap label-wrap-ok">
+                                <input type="radio" name="reason" value="电话联系不上快递员">
+                                <span class="label">电话联系不上快递员</span>
+                                </label>
+                            </li>
+                            <li class="reason-item" >
+                                <label class="label-wrap label-wrap-ok">
+                                    <input type="radio" name="reason" value="填错收件人信息">
+                                    <span class="label">填错收件人信息</span>
+                                </label>
+                            </li>
+                            <li class="reason-item" >
+                                <label class="label-wrap label-wrap-ok">
+                                    <input type="radio" name="reason" value="需求有变,暂时不需要寄件">
+                                    <span class="label">需求有变,暂时不需要寄件</span>
+                                </label>
+                            </li>
+                            <li class="reason-item" >
+                                <label class="label-wrap label-wrap-ok">
+                                    <input type="radio" name="reason" value="快递员说太员,快递员没来">
+                                    <span class="label">快递员说太员,快递员没来</span>
+                                </label>
+                            </li>
+                            <li class="reason-item">
+                                <label class="label-wrap label-wrap-ok">
+                                    <input type="radio" name="reason" value="下单后等太久,快递员没来">
+                                    <span class="label">下单后等太久,快递员没来</span>
+                                </label>
+                            </li>
+                            <li class="reason-item">
+                                <label class="label-wrap label-wrap-else">
+                                    <input type="radio" name="reason" value="6">
+                                    <span class="label">其他</span>
+                                </label>
+                            </li>
+                            <li class="reason-item last-reason-item" style="display: none">
+                                <input type="text" placeholder="请输入其他原因">
+                            </li>
                         </ul>
                         <div class="btn-wrap">
                             <!---->
@@ -576,7 +635,7 @@
         }
     }
 </script>
-<script src="${pageContext.request.contextPath}/js/util/jquery-1.12.1.min.js"></script>
+<%--<script src="${pageContext.request.contextPath}/js/util/jquery-1.12.1.min.js"></script>--%>
 <script src="${pageContext.request.contextPath}/js/util/jquery-migrate-1.4.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/share/vue.js"></script>
 <script src="${pageContext.request.contextPath}/js/share/base_v4.js?version=201707191039"></script>
@@ -586,6 +645,7 @@
 <script src="${pageContext.request.contextPath}/js/share/clipboard.min-20191031.js?vertion=20191031"></script>
 <script src="${pageContext.request.contextPath}/js/page/sent_v6.js?version=8"></script>
 <script src="${pageContext.request.contextPath}/layui/layui.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery-3.4.1.min.js"></script>
 </body>
 
 <script type="text/javascript">
@@ -670,6 +730,7 @@
         $(".form-wrap>select>option").each(function () {
             //判断上次选中的订单状态和下拉列表里面的订单状态相同
             if (orderState==$(this).val()){
+                $(this).parent().next(".select").text($(this).text());
                 $(this).attr("selected",true);
             }else{
                 $(this).attr("selected",false);
@@ -711,6 +772,88 @@
         window.location.href="pjcSelectAllOrder?orderState="+$(".form-wrap>select").val()+"&"+nameOrPhone+"="+$(".searchVal").val();
     });
 
+    /*给取消订单添加点击事件*/
+    //选中的订单id
+    var  orderId=0;
+    $(".td-warn").click(function () {
+        $(".dialog-wrap").show();
+        //赋值订单id
+        orderId = $(this).next().text();
+        /*默认选中*/
+        $(".label-wrap-else").children("input").attr("checked",true);
+        //显示隐藏的input
+        /*$(".last-reason-item").show();*/
+        $(".last-reason-item").children().val("");
+    });
+    var reasonofcancellation="";
+    /*关闭弹框*/
+    $(".dialog-close").click(function () {
+        $(".dialog-wrap").hide();
+        $(".label-wrap").children("input").attr("checked",false);
+        //将值赋为空
+        reasonofcancellation="";
+    });
+    /*给其它原因添加点击事件*/
+    $(".label-wrap-else").click(function () {
+        $(".last-reason-item").show();
+    });
+    /*给原因添加点击事件*/
+    $(".label-wrap-ok").click(function () {
+        $(".last-reason-item").hide();
+        reasonofcancellation=$(this).children("input").val();
+    });
+    /*提交按钮添加点击事件*/
+    $(".btn").click(function () {
+        if(!$(".last-reason-item").is(":hidden")){
+            if($(".last-reason-item").children("input").val().length>4){
+                reasonofcancellation=$(".last-reason-item").children("input").val();
+            }else{
+                reasonofcancellation="";
+                layui.use(['layer','laydate'], function() {
+                    layui.layer.msg("取消原因不能小于四个字符",{icon:5});
+                });
+            }
+        }
+
+        if(reasonofcancellation!=""){
+            $.ajax({
+                type: "POST",
+                url: "${pageContext.request.contextPath}/orders/pjcUpdateState",
+                data: "orderId="+orderId+"&reasonofcancellation="+reasonofcancellation,
+                success : function (msg) {
+                    //调用检查是否有带条件的方法
+                    checkParmeter();
+                }
+            })
+        }
+    })
+
+    /*检查是否有带条件的方法*/
+    function checkParmeter() {
+        var orderState;
+        //循环所有的订单状态
+        $(".form-wrap>select>option").each(function () {
+            //判断上次选中的订单状态和下拉列表里面的订单状态相同
+            if ( $(this).parent().next(".select").text()==$(this).text()){
+                orderState=$(this).val();
+            }
+        })
+        //判断带条件的
+        if(orderState!="" || $(".searchVal").val()!=""){
+            var nameOrPhone="";
+            if((/^(0\d{2}-\d{7,8}|0\d{3}-\d{7,8}|1[345678]\d{9})$/).test($(".searchVal").val())){
+                nameOrPhone="addressPhone"
+            }else{
+                nameOrPhone="addressName"
+            }
+            //待参数刷新
+            window.location.href="pjcSelectAllOrder?orderState="+orderState+"&"+nameOrPhone+"="+$(".searchVal").val();
+        }else{
+            //刷新
+            window.location.href="pjcSelectAllOrder";
+        }
+    }
+
     //复制
     var clipboard = new ClipboardJS('.copy');
     layui.use(['layer','laydate'], function() {
@@ -726,5 +869,6 @@
             console.log(e);
         });
     });
+
 </script>
 </html>

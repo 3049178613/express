@@ -1,11 +1,13 @@
 package com.yidu.express_order.daopjc;
 
+import com.yidu.express_order.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
+
 
 /**
  * (Orders)表数据库访问层

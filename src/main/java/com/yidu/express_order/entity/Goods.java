@@ -101,8 +101,8 @@ public class Goods implements Serializable {
         this.auditopinion = auditopinion;
     }
 
-    public Integer getStieId() {
-        return stieId;
+    public Integer getStieId(Integer stieId) {
+        return this.stieId;
     }
 
     public void setStieId(Integer stieId) {

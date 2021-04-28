@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidu.express_order.daopjc.StieDao">
+
+    <resultMap id="BaseResultMap" type="com.yidu.express_order.entity.Stie">
+        <!--@Table stie-->
+        <result property="stieId" column="stie_Id" jdbcType="INTEGER"/>
+        <result property="stieAddress" column="stie_address" jdbcType="VARCHAR"/>
+        <result property="stieLevel" column="stie_level" jdbcType="INTEGER"/>
+        <result property="parentId" column="parent_Id" jdbcType="VARCHAR"/>
+        <result property="childrenId" column="children_Id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          stie_Id, stie_address, stie_level, parent_Id, children_Id
+        from express.stie
+        where stie_Id = #{stieId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          stie_Id, stie_address, stie_level, parent_Id, children_Id
+        from express.stie
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          stie_Id, stie_address, stie_level, parent_Id, children_Id
+        from express.stie
+        <where>
+            <if test="stieId != null">
+                and stie_Id = #{stieId}
+            </if>
+            <if test="stieAddress != null and stieAddress != ''">
+                and stie_address = #{stieAddress}
+            </if>
+            <if test="stieLevel != null">
+                and stie_level = #{stieLevel}
+            </if>
+            <if test="parentId != null and parentId != ''">
+                and parent_Id = #{parentId}
+            </if>
+            <if test="childrenId != null and childrenId != ''">
+                and children_Id = #{childrenId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="stieId" useGeneratedKeys="true">
+        insert into express.stie(stie_address, stie_level, parent_Id, children_Id)
+        values (#{stieAddress}, #{stieLevel}, #{parentId}, #{childrenId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update express.stie
+        <set>
+            <if test="stieAddress != null and stieAddress != ''">
+                stie_address = #{stieAddress},
+            </if>
+            <if test="stieLevel != null">
+                stie_level = #{stieLevel},
+            </if>
+            <if test="parentId != null and parentId != ''">
+                parent_Id = #{parentId},
+            </if>
+            <if test="childrenId != null and childrenId != ''">
+                children_Id = #{childrenId},
+            </if>
+        </set>
+        where stie_Id = #{stieId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from express.stie where stie_Id = #{stieId}
+    </delete>
+
+    <!--根据地址查询详细地址-->
+    <select id="selectStreetByAddress" resultMap="BaseResultMap">
+        SELECT
+             stie_Id, stie_address, stie_level, parent_Id, children_Id
+        FROM express.stie WHERE children_Id IN (
+        SELECT parent_Id FROM express.stie WHERE children_Id IN (
+        SELECT parent_Id FROM express.stie WHERE children_Id IN (
+        SELECT parent_Id FROM express.stie WHERE stie_address = #{province}
+        )
+        AND stie_address=#{city}
+        )
+        AND stie_address=#{district}
+        )
+    </select>
+
+    <select id="selectDistrictByAddress" resultMap="BaseResultMap">
+        SELECT
+             stie_Id, stie_address, stie_level, parent_Id, children_Id
+        FROM express.stie WHERE children_Id IN (
+        SELECT parent_Id FROM express.stie WHERE children_Id IN (
+        SELECT parent_Id FROM express.stie WHERE stie_address = #{province}
+        )
+        AND stie_address=#{city}
+        )
+    </select>
+
+</mapper>
